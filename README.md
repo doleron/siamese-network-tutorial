@@ -57,4 +57,4 @@ def contrastive_loss_with_margin(margin):
 
 ## Results
 
-![test data](https://raw.githubusercontent.com/doleron/siamese-network-tutorial/raw/main/test_results.png)
+![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_results.png)
