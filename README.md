@@ -1,16 +1,21 @@
 # siamese-network-tutorial
 
-This is a tutorial of building a Siamese Network for checking image similarity as described in the 
+This is a tutorial of building a Siamese Network for checking image similarity as described in [Learning a Similarity Metric Discriminatively, with Application to Face Verification (Chopra, Hadsell, & LeCun, 2005)](https://ieeexplore.ieee.org/document/1467314)
 
-## Overview
+## Case study
 
 In this tutorial, we build a Siamese Network to check when 2 images are from the same person.
 
 ## The data
 
-We use a database containing 128 face images of 16 different celebrites. The 128 are used to generate 16,256 pairs. A subset containing 1/2 of original pairs set is randomically selected to generate the training data (70%), validation data (20%) and test data (10%).
+We use a database containing 128 face images of 16 different celebrites. The 128 individual images are divided in two groups:
 
-For each pair it is assigned a label value of 0 when the two images come from different persons and 1 otherwise.
+- 70% for training & validation (89 images)
+- 30% for test (39 images)
+
+Then we permutations of the images from the training & validation set in order to generate 7,832 pairs. This 7,832 are finally divided into training data (70%) and validation data (20%). In the end, we have 3 datasets: training, validation & test
+
+For each pair in each dataset is assigned a label value of 0 when two images come from different persons and 1 otherwise.
 
 ![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_data.png)
 
@@ -53,8 +58,15 @@ def contrastive_loss_with_margin(margin):
         return (y_true * square_pred + (1 - y_true) * margin_square)
     return contrastive_loss
 ```
-
-
 ## Results
+
+In the most of executions, the model achived high performance even on test data.
+
+For example:
+
+```
+Test Loss = 0.0002880029787775129, Test Precision = 1.0, Test Recall = 1.0
+TP = 50, TN = 764, FP = 0, FN = 0
+```
 
 ![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_results.png)
