@@ -4,48 +4,45 @@ This is a tutorial of building a Siamese Network for checking image similarity a
 
 ## Case study
 
-In this tutorial, we build a Siamese Network to check when 2 images are from the same person.
+In this tutorial, we build a Siamese Network to check when 2 images belong from the same person.
 
 ## The data
 
-We use a database containing 128 face images of 16 different celebrites. The 128 individual images are divided in two groups:
-
-- 70% for training & validation (89 images)
-- 30% for test (39 images)
-
-Then we permutations of the images from the training & validation set in order to generate 7,832 pairs. This 7,832 are finally divided into training data (70%) and validation data (20%). In the end, we have 3 datasets: training, validation & test
-
-For each pair in each dataset is assigned a label value of 0 when two images come from different persons and 1 otherwise.
+We use a database containing 750 face images of 15 different celebrites: katty perry, nicolas cage, chris emsworth, elon musk, angelababy, messi, meryl streep, obama, priyanka chopra, lula, idris elba, mbappe, brad pitt, megan rapinoe, and bia miranda.
 
 ![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_data.png)
 
 ## The model
 
-The choosen model is a 2 branch Siamese Network using standard Euclidean Distance. The sub-branches are two headless VGG 19 networks previously trained on ImageNet.
+The choosen model is a 2 branch Siamese Network using standard Euclidean Distance. The sub-branches are headless MobileNetV2 networks previously trained on ImageNet.
 
 ![model](https://raw.githubusercontent.com/doleron/siamese-network-tutorial/raw/main/model.png)
 
 The Euclidean distance is define as usual:
 
 ```python
-def euclidean_distance(vects):
-    x, y = vects
+def euclidean_distance(x, y):
     sum_square = K.sum(K.square(x - y), axis=1, keepdims=True)
     return K.sqrt(K.maximum(sum_square, K.epsilon()))
 ```
 
 ## The training
 
-The model is trained during 20 EPOCHS using RMSProp with default configuration:
+The model is trained during atmost 20 EPOCHS using RMSProp with default configuration:
 
 ```python
-EPOCHS = 20
+EPOCHS = 100
 
-model.compile(loss=contrastive_loss_with_margin(margin=1), optimizer=tf.keras.optimizers.RMSprop())
+model.compile(loss=contrastive_loss_with_margin(margin=1), optimizer=tf.keras.optimizers.RMSprop(),
+              metrics=[Custom_Accuracy(), Custom_Precision(), Custom_Recall()])
 
-history = model.fit(train_ds, steps_per_epoch=(training_size // TRAINING_BATCH_SIZE),
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 20, restore_best_weights = True, start_from_epoch = 10)
+
+history = model.fit(train_ds, 
+                    steps_per_epoch=(len(training_pairs) // TRAINING_BATCH_SIZE),
                     validation_data=validation_ds,
-                    epochs=EPOCHS)
+                    epochs=EPOCHS, 
+                    callbacks=[early_stop])
 ```
 
 The constrative loss is defined as usual:
@@ -60,13 +57,13 @@ def contrastive_loss_with_margin(margin):
 ```
 ## Results
 
-In the most of executions, the model achived high performance even on test data.
+In the most of executions, the model achived good performance even on test data.
 
 For example:
 
 ```
-Test Loss = 0.0002880029787775129, Test Precision = 1.0, Test Recall = 1.0
-TP = 50, TN = 764, FP = 0, FN = 0
+135/135 [==============================] - 2s 10ms/step - loss: 0.0895 - accuracy: 0.8963 - custom__precision: 0.9084 - custom__recall: 0.8815
+Test Loss = 0.0895, Test Accuracy = 0.8963, Test Precision = 0.9084, Test Recall = 0.8815
 ```
 
 ![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_results.png)
