@@ -2,6 +2,8 @@
 
 This is a tutorial of building a Siamese Network for checking image similarity as described in [Learning a Similarity Metric Discriminatively, with Application to Face Verification (Chopra, Hadsell, & LeCun, 2005)](https://ieeexplore.ieee.org/document/1467314)
 
+![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/architecture.png)
+
 ## Case study
 
 In this tutorial, we build a Siamese Network to check when 2 images belong from the same person.
