@@ -60,7 +60,7 @@ for f in files:
     file_index = int(f[f.rindex("_") + 1:-4]) - 1
     label_index = labels[file_index]
     label = CLASS_NAMES[label_index]
-    file = f[f.rindex("/") + 1:]
+    file = f[f.rindex("_") + 1:]
     dest = os.path.join(data_path, label, file)
     # print(dest)
     shutil.copyfile(f, dest)
