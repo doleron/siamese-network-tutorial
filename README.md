@@ -6,7 +6,7 @@ This is a tutorial of building a Siamese Network for checking image similarity a
 
 ## Case study
 
-In this tutorial, we build a Siamese Network to check when 2 images belong from the same person.
+In this tutorial, we build a Siamese Network to check when 2 images belong to the same type of flower.
 
 ## The data
 
