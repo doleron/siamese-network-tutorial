@@ -10,7 +10,7 @@ In this tutorial, we build a Siamese Network to check when 2 images belong from 
 
 ## The data
 
-We use a database containing 750 face images of 15 different celebrites: katty perry, nicolas cage, chris emsworth, elon musk, angelababy, messi, meryl streep, obama, priyanka chopra, lula, idris elba, mbappe, brad pitt, megan rapinoe, and bia miranda.
+We use the [Oxford Flowers 102 dataset](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/).
 
 ![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_data.png)
 
@@ -30,15 +30,15 @@ def euclidean_distance(x, y):
 
 ## The training
 
-The model is trained during atmost 20 EPOCHS using RMSProp with default configuration:
+The model is trained during atmost 200 EPOCHS using Adam with default configuration:
 
 ```python
-EPOCHS = 100
+EPOCHS = 200
 
-model.compile(loss=contrastive_loss_with_margin(margin=1), optimizer=tf.keras.optimizers.RMSprop(),
+model.compile(loss=contrastive_loss_with_margin(margin=1), optimizer=tf.keras.optimizers.Adam(),
               metrics=[Custom_Accuracy(), Custom_Precision(), Custom_Recall()])
 
-early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 20, restore_best_weights = True, start_from_epoch = 10)
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 30)
 
 history = model.fit(train_ds, 
                     steps_per_epoch=(len(training_pairs) // TRAINING_BATCH_SIZE),
@@ -64,8 +64,8 @@ In the most of executions, the model achived good performance even on test data.
 For example:
 
 ```
-135/135 [==============================] - 2s 10ms/step - loss: 0.0895 - accuracy: 0.8963 - custom__precision: 0.9084 - custom__recall: 0.8815
-Test Loss = 0.0895, Test Accuracy = 0.8963, Test Precision = 0.9084, Test Recall = 0.8815
+714/714 [==============================] - 8s 11ms/step - loss: 0.0909 - accuracy: 0.8859 - custom__precision: 0.8875 - custom__recall: 0.8838
+Validation Loss = 0.0909, Validation Accuracy = 0.8859, Validation Precision = 0.8875, Validation Recall = 0.8838
 ```
 
 ![test data](https://github.com/doleron/siamese-network-tutorial/raw/main/test_results.png)
