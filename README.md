@@ -18,7 +18,7 @@ We use the [Oxford Flowers 102 dataset](https://www.robots.ox.ac.uk/~vgg/data/fl
 
 The choosen model is a 2 branch Siamese Network using standard Euclidean Distance. The sub-branches are headless MobileNetV2 networks previously trained on ImageNet.
 
-![model](https://raw.githubusercontent.com/doleron/siamese-network-tutorial/raw/main/model.png)
+![model](https://github.com/doleron/siamese-network-tutorial/raw/main/model.png)
 
 The Euclidean distance is define as usual:
 
