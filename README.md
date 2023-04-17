@@ -16,7 +16,7 @@ We use the [Oxford Flowers 102 dataset](https://www.robots.ox.ac.uk/~vgg/data/fl
 
 ## The model
 
-The choosen model is a 2 branch Siamese Network using standard Euclidean Distance. The sub-branches are headless MobileNetV2 networks previously trained on ImageNet.
+The choosen model is a two-branch Siamese Network using standard Euclidean Distance. The sub-branches are headless MobileNetV2 networks previously trained on ImageNet.
 
 ![model](https://github.com/doleron/siamese-network-tutorial/raw/main/model.png)
 
@@ -30,7 +30,7 @@ def euclidean_distance(x, y):
 
 ## The training
 
-The model is trained during atmost 200 EPOCHS using Adam with default configuration:
+The model is trained during atmost 200 EPOCHS using Adam and default configuration:
 
 ```python
 EPOCHS = 200
@@ -47,7 +47,7 @@ history = model.fit(train_ds,
                     callbacks=[early_stop])
 ```
 
-The constrative loss is defined as usual:
+The contrastive loss is defined as usual:
 
 ```python
 def contrastive_loss_with_margin(margin):
@@ -59,7 +59,7 @@ def contrastive_loss_with_margin(margin):
 ```
 ## Results
 
-In the most of executions, the model achived good performance even on test data.
+Most of time, the model achives good performance on test data.
 
 For example:
 

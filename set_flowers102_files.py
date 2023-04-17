@@ -1,15 +1,25 @@
 import shutil, os
 import numpy as np
+import tensorflow as tf
+import pathlib
 
-data_path = 'data/flowers102'
+data_url = "https://www.robots.ox.ac.uk/~vgg/data/flowers/102/102flowers.tgz"
+archive = tf.keras.utils.get_file(origin=data_url, extract=True)
+data_dest = pathlib.Path(archive).parent.joinpath("jpg")
 
-try:
-    shutil.rmtree(data_path)
-    print("directory was removed successfully")
-except OSError as x:
-    print("An error occured: %s : %s" % (data_path, x.strerror))
+mat_url = "https://www.robots.ox.ac.uk/~vgg/data/flowers/102/imagelabels.mat"
+mat_file = tf.keras.utils.get_file(fname = "imagelabels.mat", origin = mat_url, extract = False)
 
-os.mkdir(data_path)
+data_path = pathlib.Path("data/flowers102/")
+
+if data_path.is_dir():
+    try:
+        shutil.rmtree(data_path)
+        print(str(data_path) + " was removed successfully")
+    except OSError as x:
+        print("An error occured while cleaning up dirs: %s : %s" % (data_path, x.strerror))
+
+os.makedirs(data_path)
 print("Directory '% s' created" % data_path)
 
 ORIGINAL_CLASS_NAMES = ["pink primrose", "hard-leaved pocket orchid", "canterbury bells",
@@ -46,7 +56,7 @@ for clazz in ORIGINAL_CLASS_NAMES:
     os.mkdir(path)
 
 import scipy.io
-mat = scipy.io.loadmat('data/imagelabels.mat')
+mat = scipy.io.loadmat(mat_file)
 
 labels = mat["labels"][0] - 1
 
@@ -54,7 +64,7 @@ print(labels[0:4])
 print(len(labels))
 print(np.unique(labels))
 
-files = [os.path.join(r,file) for r,d,f in os.walk("data/jpg") for file in f]
+files = [os.path.join(r,file) for r,d,f in os.walk(data_dest) for file in f]
 
 for f in files:
     file_index = int(f[f.rindex("_") + 1:-4]) - 1
@@ -62,5 +72,4 @@ for f in files:
     label = CLASS_NAMES[label_index]
     file = f[f.rindex("_") + 1:]
     dest = os.path.join(data_path, label, file)
-    # print(dest)
     shutil.copyfile(f, dest)
